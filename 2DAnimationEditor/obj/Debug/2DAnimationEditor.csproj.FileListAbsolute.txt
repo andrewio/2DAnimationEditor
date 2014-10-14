@@ -1,0 +1,9 @@
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\bin\Debug\2DAnimationEditor.exe.config
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\bin\Debug\2DAnimationEditor.exe
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\bin\Debug\2DAnimationEditor.pdb
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\obj\Debug\2DAnimationEditor.csprojResolveAssemblyReference.cache
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\obj\Debug\_2DAnimationEditor.Form1.resources
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\obj\Debug\_2DAnimationEditor.Properties.Resources.resources
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\obj\Debug\2DAnimationEditor.csproj.GenerateResource.Cache
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\obj\Debug\2DAnimationEditor.exe
+C:\Users\andrewio\Desktop\Apps\2DAnimationEditor\2DAnimationEditor\obj\Debug\2DAnimationEditor.pdb
