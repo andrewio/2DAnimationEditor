@@ -16,10 +16,10 @@ namespace _2DAnimationEditor
 
 
         // Each polygon is represented by a List.
-        private List<Point> Vertices = new List<Point>();
+        private List<Vertex2D> vertices = new List<Vertex2D>();
 
         // The current mouse position while drawing a new polygon.
-        private Point NewPoint;
+        private Point newPoint;
 
 
         public Form1()
@@ -35,7 +35,11 @@ namespace _2DAnimationEditor
         // Start or continue drawing a new polygon.
         private void SceneView_MouseDown(object sender, MouseEventArgs e)
         {
-            this.Vertices.Add(e.Location);
+
+            if (checkBoxVertex.Checked)
+            {
+                this.vertices.Add(new Vertex2D(e.Location));
+            }
 
             // Redraw.
             SceneView.Invalidate();
@@ -47,7 +51,23 @@ namespace _2DAnimationEditor
         // Move the next point in the new polygon.
         private void SceneView_MouseMove(object sender, MouseEventArgs e)
         {
-            NewPoint = e.Location;
+            
+            newPoint = e.Location;
+            foreach (var vertex in this.vertices)
+            {
+                //Если есть пересечение курсора с вершиной - подсветить ее
+                if (Math.Pow(newPoint.X - vertex.X, 2) + Math.Pow(newPoint.Y - vertex.Y, 2) < Math.Pow(vertex.Radius, 2))
+                {
+                    vertex.Highlight = true;
+                }
+                else
+                {
+                    //vertex.Highlight = false;
+                }
+
+            }
+
+
             SceneView.Invalidate();
         }
 
@@ -58,21 +78,30 @@ namespace _2DAnimationEditor
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.Clear(SceneView.BackColor);
 
-            foreach (var vertex in this.Vertices)
+            foreach (var vertex in this.vertices)
             {
-                DrawVertex(vertex, e);
+                vertex.DrawBy(e);
             }
 
-            DrawVertex(NewPoint,e);
+            if (checkBoxVertex.Checked)
+            {
+                Vertex2D v = new Vertex2D(newPoint);
+                v.DrawBy(e);
+
+            }
         }
 
 
-        private void DrawVertex(Point p, PaintEventArgs e)
+       
+
+        private void button1_Click(object sender, EventArgs e)
         {
-            int vertexWidth = 40;
-            Rectangle rect = new Rectangle(p.X - vertexWidth / 2, p.Y - vertexWidth / 2, vertexWidth, vertexWidth);
-            e.Graphics.DrawEllipse(Pens.Aqua, rect);
-            e.Graphics.FillEllipse(Brushes.Black, rect);
+
+        }
+
+        private void checkBoxVertex_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
