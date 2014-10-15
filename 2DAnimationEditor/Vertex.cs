@@ -70,5 +70,11 @@ namespace _2DAnimationEditor
             }
         }
 
+        public Point GetPoint()
+        {
+            Point p = new Point((int)X, (int)Y);
+            return p;
+        }
+
     }
 }

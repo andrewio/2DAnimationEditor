@@ -24,18 +24,23 @@ namespace _2DAnimationEditor
 
         // Происходит ли в данный момнет перемещение вершины
         private bool vertexMoving = false;
+        // Происходит ли в данный момнет cсоздании грани 
+        private bool edgeCreating = false;
 
         // Вершина, над которой в последний раз находился курсор
         private Vertex2D hitVertex;
 
-        //Для эстетического перемещения вершины
-        //При D'n'D вершины: в каком месте пользователь взял вершину,
-        //относительно него и перемещаем 
+        // Для эстетического перемещения вершины
+        // При D'n'D вершины: в каком месте пользователь взял вершину,
+        // относительно него и перемещаем 
         private float movingOffsetX;
         private float movingOffsetY;
 
-        //Режимы редактирования
+        // Режимы редактирования
         private List<CheckBox> modes;
+
+        // Создаваемое ребро
+        private List<Vertex2D> Edge = new List<Vertex2D>(2);
 
 
         public Form1()
@@ -84,14 +89,14 @@ namespace _2DAnimationEditor
                 }
                 else
                 {
-                    //// Добавить к прорисовке новую точку
+                    // Добавить к прорисовке новую точку
                     this.Animation[currentFrameIndex].Vertices.Add(new Vertex2D(e.Location), new HashSet<Vertex2D>());                    
                     
                 }
             }
 
             // Режим перемещения вершин
-            if (checkBoxMoveMode.Checked)
+            if (checkBoxMoveMode.Checked && MouseIsOver(hitVertex))
             {
                 vertexMoving = true;
                 SceneView.MouseMove += SceneView_MouseMove_MovingVertex;
@@ -103,8 +108,34 @@ namespace _2DAnimationEditor
                 movingOffsetY = hitVertex.Y - e.Y;
             }
 
+            if (checkBoxEdge.Checked)
+            {
+                
+                if (MouseIsOver(hitVertex))
+                {
+                    edgeCreating = true;
+                    Edge.Add(hitVertex);
+                    if (Edge.Count == 2)
+                        SceneView.MouseUp += SceneView_MouseUp_EdgeCreating;
+
+                }
+                
+            }
             // Redraw
             SceneView.Invalidate();
+        }
+
+        private void SceneView_MouseUp_EdgeCreating(
+    object sender, MouseEventArgs e)
+        {
+            SceneView.MouseUp -= SceneView_MouseUp_EdgeCreating;
+            //Добавление ребра
+            Animation[currentFrameIndex].Vertices[Edge[0]].Add(Edge[1]);
+            Animation[currentFrameIndex].Vertices[Edge[1]].Add(Edge[0]);
+
+            Edge.Clear();
+            edgeCreating = false;
+            
         }
 
         private void SceneView_MouseMove_MovingVertex(
@@ -179,12 +210,19 @@ namespace _2DAnimationEditor
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.Clear(SceneView.BackColor);
 
-            //Перерисовка вершин
+            //Перерисовка вершин и ребер
 
             foreach (var vert in Animation[currentFrameIndex].Vertices)
             {
                 //Console.WriteLine("Перерисовка: " + vert.Key.X + " " + vert.Key.Y);
                 vert.Key.DrawBy(e);
+                
+                // соседи
+                foreach (var neighbour in vert.Value)
+                {
+                    e.Graphics.DrawLine(Pens.Red, vert.Key.GetPoint(), neighbour.GetPoint());
+                }
+                
             }
 
             // Прообраз добавляемой вершины (отображается возле курсора)
