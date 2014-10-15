@@ -21,7 +21,10 @@ namespace _2DAnimationEditor
         // Прообраз добавляемой вершины (отображается возле курсора)
         private Vertex2D preImage;
 
-        //
+        // Происходит ли в данный момнет перемещение вершины
+        private bool vertexMoving = false;
+
+        // Вершина, над которой находится курсор
         private int hitVertex;
 
         //Для эстетического перемещения вершины
@@ -55,6 +58,7 @@ namespace _2DAnimationEditor
             // Режим перемещения вершин
             if (checkBoxMoveMode.Checked)
             {
+                vertexMoving = true;
                 SceneView.MouseMove += SceneView_MouseMove_MovingVertex;
                 SceneView.MouseUp += SceneView_MouseUp_MovingVertex;
 
@@ -91,6 +95,10 @@ namespace _2DAnimationEditor
         {
             SceneView.MouseMove -= SceneView_MouseMove_MovingVertex;
             SceneView.MouseUp -= SceneView_MouseUp_MovingVertex;
+
+            //Прекратить перемещение
+            vertexMoving = false;
+
         }
 
 
@@ -106,7 +114,8 @@ namespace _2DAnimationEditor
                 if (MouseIsOver(vertex))
                 {
                     vertex.Highlight = true;
-                    hitVertex = vertices.IndexOf(vertex);
+                    if(!vertexMoving)
+                        hitVertex = vertices.IndexOf(vertex);
 
                 }
                 else
