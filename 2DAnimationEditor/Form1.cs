@@ -129,9 +129,19 @@ namespace _2DAnimationEditor
     object sender, MouseEventArgs e)
         {
             SceneView.MouseUp -= SceneView_MouseUp_EdgeCreating;
-            //Добавление ребра
-            Animation[currentFrameIndex].Vertices[Edge[0]].Add(Edge[1]);
-            Animation[currentFrameIndex].Vertices[Edge[1]].Add(Edge[0]);
+
+            if (e.Button == MouseButtons.Right)
+            {
+                //Добавление ребра
+                Animation[currentFrameIndex].Vertices[Edge[0]].Remove(Edge[1]);
+                Animation[currentFrameIndex].Vertices[Edge[1]].Remove(Edge[0]);
+            }
+            else
+            {
+                //Добавление ребра
+                Animation[currentFrameIndex].Vertices[Edge[0]].Add(Edge[1]);
+                Animation[currentFrameIndex].Vertices[Edge[1]].Add(Edge[0]);
+            }
 
             Edge.Clear();
             edgeCreating = false;
