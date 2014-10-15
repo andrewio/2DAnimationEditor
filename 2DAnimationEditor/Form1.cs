@@ -53,21 +53,26 @@ namespace _2DAnimationEditor
             modes = new List<CheckBox> { checkBoxEdge, checkBoxVertex, checkBoxMoveMode };
 
             int framesCount = Convert.ToInt32(this.textBoxFramesCount.Text);
-
+            textBoxCurrentFrame.Text = currentFrameIndex.ToString();
             //Чтение количества кадров по умолчанию, подготовка таблицы кадров
             dataGridAnimation.RowCount  = 1;
             dataGridAnimation.ColumnCount = framesCount;
-            //Заполнение номерами кадров
-            for (int i = 0; i < dataGridAnimation.ColumnCount; i++)
-            {
-                dataGridAnimation[i, 0].Value = i;
-            }
+            SetFramesNumbers();
             //Текущий кадр
             currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
             //Init Пустых кадров
             for (int i = 0; i < framesCount; i++)
             {
                 Animation.Add(new Frame());
+            }
+        }
+
+        private void SetFramesNumbers()
+        {
+            //Заполнение номерами кадров
+            for (int i = 0; i < dataGridAnimation.ColumnCount; i++)
+            {
+                dataGridAnimation[i, 0].Value = i;
             }
         }
 
@@ -85,6 +90,13 @@ namespace _2DAnimationEditor
                     if (MouseIsOver(hitVertex))
                     {
                         this.Animation[currentFrameIndex].Vertices.Remove(hitVertex);
+
+                        //Удаление связанных граней
+                        foreach (var vert in Animation[currentFrameIndex].Vertices)
+                        {
+                            vert.Value.Remove(hitVertex);
+
+                        }
                     }
                 }
                 else
@@ -109,24 +121,21 @@ namespace _2DAnimationEditor
             }
 
             if (checkBoxEdge.Checked)
-            {
-                
+            {            
                 if (MouseIsOver(hitVertex))
                 {
                     edgeCreating = true;
                     Edge.Add(hitVertex);
                     if (Edge.Count == 2)
                         SceneView.MouseUp += SceneView_MouseUp_EdgeCreating;
-
-                }
-                
+                }              
             }
             // Redraw
             SceneView.Invalidate();
         }
 
         private void SceneView_MouseUp_EdgeCreating(
-    object sender, MouseEventArgs e)
+            object sender, MouseEventArgs e)
         {
             SceneView.MouseUp -= SceneView_MouseUp_EdgeCreating;
 
@@ -149,7 +158,7 @@ namespace _2DAnimationEditor
         }
 
         private void SceneView_MouseMove_MovingVertex(
-    object sender, MouseEventArgs e)
+            object sender, MouseEventArgs e)
         {
             // Позиция нового центра вершины 
             float new_x = e.X + movingOffsetX ;
@@ -282,7 +291,42 @@ namespace _2DAnimationEditor
 
         private void dataGridAnimation_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
-            textBoxCurrentFrame.Text = dataGridAnimation.CurrentCell.ColumnIndex.ToString();
+            
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.ToUpper(e.KeyChar) == (char)Keys.A && currentFrameIndex > 0)
+            {
+                currentFrameIndex--;
+                dataGridAnimation.ClearSelection();
+                dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
+                textBoxCurrentFrame.Text = (currentFrameIndex).ToString();          
+            }
+            else if (Char.ToUpper(e.KeyChar) == (char)Keys.D && currentFrameIndex < dataGridAnimation.ColumnCount - 1)
+            {
+                currentFrameIndex++;
+                dataGridAnimation.ClearSelection();
+                dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
+                textBoxCurrentFrame.Text = (currentFrameIndex).ToString();
+            }
+
+            
+        }
+
+        private void dataGridAnimation_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
+            textBoxCurrentFrame.Text = currentFrameIndex.ToString();
+        }
+
+
+        private void buttonSetFramesCount_Click(object sender, EventArgs e)
+        {
+            dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
+            currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
+            textBoxCurrentFrame.Text = currentFrameIndex.ToString();
+            SetFramesNumbers();
         }
     }
 }

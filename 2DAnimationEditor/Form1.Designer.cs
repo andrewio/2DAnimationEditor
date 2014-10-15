@@ -35,8 +35,8 @@
             this.checkBoxMoveMode = new System.Windows.Forms.CheckBox();
             this.dataGridAnimation = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonSetFramesCount = new System.Windows.Forms.Button();
             this.textBoxFramesCount = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxCurrentFrame = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.SceneView)).BeginInit();
@@ -120,11 +120,12 @@
             this.dataGridAnimation.RowHeadersVisible = false;
             this.dataGridAnimation.Size = new System.Drawing.Size(727, 45);
             this.dataGridAnimation.TabIndex = 6;
+            this.dataGridAnimation.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridAnimation_CellClick);
             this.dataGridAnimation.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridAnimation_CellEnter);
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.buttonSetFramesCount);
             this.groupBox2.Controls.Add(this.textBoxFramesCount);
             this.groupBox2.Location = new System.Drawing.Point(751, 215);
             this.groupBox2.Name = "groupBox2";
@@ -132,6 +133,16 @@
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Frames count";
+            // 
+            // buttonSetFramesCount
+            // 
+            this.buttonSetFramesCount.Location = new System.Drawing.Point(95, 20);
+            this.buttonSetFramesCount.Name = "buttonSetFramesCount";
+            this.buttonSetFramesCount.Size = new System.Drawing.Size(34, 25);
+            this.buttonSetFramesCount.TabIndex = 1;
+            this.buttonSetFramesCount.Text = "OK";
+            this.buttonSetFramesCount.UseVisualStyleBackColor = true;
+            this.buttonSetFramesCount.Click += new System.EventHandler(this.buttonSetFramesCount_Click);
             // 
             // textBoxFramesCount
             // 
@@ -141,15 +152,6 @@
             this.textBoxFramesCount.Size = new System.Drawing.Size(81, 25);
             this.textBoxFramesCount.TabIndex = 0;
             this.textBoxFramesCount.Text = "20";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(95, 20);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(34, 25);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
             // 
             // groupBox3
             // 
@@ -179,9 +181,11 @@
             this.Controls.Add(this.dataGridAnimation);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.SceneView);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "2D Animation Editor";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.SceneView)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridAnimation)).EndInit();
@@ -202,7 +206,7 @@
         private System.Windows.Forms.CheckBox checkBoxMoveMode;
         private System.Windows.Forms.DataGridView dataGridAnimation;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonSetFramesCount;
         private System.Windows.Forms.TextBox textBoxFramesCount;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBoxCurrentFrame;
