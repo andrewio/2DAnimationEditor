@@ -9,5 +9,11 @@ namespace _2DAnimationEditor
     class Frame
     {
         private Dictionary<Vertex2D, HashSet<Vertex2D>> vertices = new Dictionary<Vertex2D, HashSet<Vertex2D>>();
+
+        internal Dictionary<Vertex2D, HashSet<Vertex2D>> Vertices
+        {
+            get { return vertices; }
+            set { vertices = value; }
+        }
     }
 }
