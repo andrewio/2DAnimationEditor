@@ -14,12 +14,12 @@ namespace _2DAnimationEditor
     public partial class Form1 : Form
     {
 
-
-        // Each polygon is represented by a List.
         private List<Vertex2D> vertices = new List<Vertex2D>();
 
-        // The current mouse position while drawing a new polygon.
+        // Текущая позиция курсора на компоненте PictureBox
         private Point newPoint;
+        // Прообраз добавляемой вершины (отображается возле курсора)
+        private Vertex2D preImage;
 
 
         public Form1()
@@ -32,27 +32,28 @@ namespace _2DAnimationEditor
             
         }
 
-        // Start or continue drawing a new polygon.
+
         private void SceneView_MouseDown(object sender, MouseEventArgs e)
         {
 
+            //Режим Vertex
             if (checkBoxVertex.Checked)
             {
                 this.vertices.Add(new Vertex2D(e.Location));
             }
 
-            // Redraw.
+            // Redraw
             SceneView.Invalidate();
         }
 
 
-      
-
-        // Move the next point in the new polygon.
         private void SceneView_MouseMove(object sender, MouseEventArgs e)
         {
-            
+            // Обновление текущей позиции курсора
             newPoint = e.Location;
+
+
+            // Проверка наложения курсора на vertex ...
             foreach (var vertex in this.vertices)
             {
                 //Если есть пересечение курсора с вершиной - подсветить ее
@@ -67,26 +68,27 @@ namespace _2DAnimationEditor
 
             }
 
-
+            // Перерисовка
             SceneView.Invalidate();
         }
 
-        // Redraw old polygons in blue. Draw the new polygon in green.
-        // Draw the final segment dashed.
+
         private void SceneView_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             e.Graphics.Clear(SceneView.BackColor);
 
+            // Перерисовка вершин
             foreach (var vertex in this.vertices)
             {
                 vertex.DrawBy(e);
             }
 
+            // Прообраз добавляемой вершины (отображается возле курсора)
             if (checkBoxVertex.Checked)
             {
-                Vertex2D v = new Vertex2D(newPoint);
-                v.DrawBy(e);
+                preImage = new Vertex2D(newPoint);
+                preImage.DrawBy(e);
 
             }
         }

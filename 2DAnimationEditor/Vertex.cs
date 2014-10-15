@@ -11,7 +11,10 @@ namespace _2DAnimationEditor
     class Vertex2D : Point2D
     {
         private float radius = 20;
-        private float radiusHighlight = 30;
+        private float radiusHighlight;
+        private float highlightRate = 1.25f;
+        private RectangleF skeletonHighlight;
+        private RectangleF skeleton;
 
         public float Radius
         {
@@ -30,29 +33,41 @@ namespace _2DAnimationEditor
 
         public Vertex2D(Point p) : base(p.X, p.Y)
         {
-
+            Init();
         }
 
         public Vertex2D(float x, float y)
             : base(x, y)
         {
-
+            Init();
         }
 
-        public Vertex2D() : base() { }
+        public Vertex2D() : base() 
+        {
+            Init();
+        }
+
+
+        public void Init()
+        {
+            // Заготовка эллипса и его подсветки для this
+            radiusHighlight = radius * highlightRate;
+            skeleton = new RectangleF(X - radius, Y - radius, 2 * radius, 2 * radius);
+            skeletonHighlight = new RectangleF(X - radiusHighlight, Y - radiusHighlight, 2 * radiusHighlight, 2 * radiusHighlight);
+               
+        }
 
         public void DrawBy (PaintEventArgs e)
         {
-            RectangleF rect = new RectangleF(X - radius, Y - radius, 2 * radius, 2 * radius);
-            e.Graphics.DrawEllipse(Pens.Aqua, rect);
-            e.Graphics.FillEllipse(Brushes.Black, rect);
+            /* Прорисовка this на компоненте PictureBox */
 
+            e.Graphics.DrawEllipse(Pens.Aqua, skeleton);
+            e.Graphics.FillEllipse(Brushes.Black, skeleton);
 
+            // Подсветка (устанавливается в true при наведении курсора)
             if (highlight == true)
             {
-
-                RectangleF rectHighlight = new RectangleF(X - radiusHighlight, Y - radiusHighlight, 2 * radiusHighlight, 2 * radiusHighlight);
-                e.Graphics.DrawEllipse(Pens.Aqua, rectHighlight);
+                e.Graphics.DrawEllipse(Pens.Aqua, skeletonHighlight);
                 highlight = false;
             }
         }
