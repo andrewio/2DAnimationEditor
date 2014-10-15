@@ -51,6 +51,7 @@ namespace _2DAnimationEditor
         public void Init()
         {
             // Заготовка эллипса и его подсветки для this
+            // (Рисуем эллипс относительно центра)
             radiusHighlight = radius * highlightRate;
             skeleton = new RectangleF(X - radius, Y - radius, 2 * radius, 2 * radius);
             skeletonHighlight = new RectangleF(X - radiusHighlight, Y - radiusHighlight, 2 * radiusHighlight, 2 * radiusHighlight);

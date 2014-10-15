@@ -21,9 +21,14 @@ namespace _2DAnimationEditor
         // Прообраз добавляемой вершины (отображается возле курсора)
         private Vertex2D preImage;
 
+        //
         private int hitVertex;
-        private float offsetX;
-        private float offsetY;
+
+        //Для эстетического перемещения вершины
+        //При D'n'D вершины: в каком месте пользователь взял вершину,
+        //относительно него и перемещаем 
+        private float movingOffsetX;
+        private float movingOffsetY;
 
 
         public Form1()
@@ -43,6 +48,7 @@ namespace _2DAnimationEditor
             // Режим Vertex
             if (checkBoxVertex.Checked)
             {
+                // Добавить к прорисовке новую точку
                 this.vertices.Add(new Vertex2D(e.Location));
             }
 
@@ -52,10 +58,10 @@ namespace _2DAnimationEditor
                 SceneView.MouseMove += SceneView_MouseMove_MovingVertex;
                 SceneView.MouseUp += SceneView_MouseUp_MovingVertex;
 
-                // Remember the offset from the mouse
-                // to the segment's first point.
-                offsetX = vertices[hitVertex].X - e.X;
-                offsetY = vertices[hitVertex].Y - e.Y;
+                // Смещение курсора относительно центра
+                // в момент взятия вершины
+                movingOffsetX = vertices[hitVertex].X - e.X;
+                movingOffsetY = vertices[hitVertex].Y - e.Y;
             }
 
             // Redraw
@@ -65,26 +71,21 @@ namespace _2DAnimationEditor
         private void SceneView_MouseMove_MovingVertex(
     object sender, MouseEventArgs e)
         {
-            // See how far the first point will move.
-            int new_x1 = e.X + (int)offsetX;
-            int new_y1 = e.Y + (int)offsetY;
+            // Позиция нового центра вершины 
+            float new_x = e.X + movingOffsetX ;
+            float new_y = e.Y + movingOffsetY;
 
-            int dx = new_x1 - (int)vertices[hitVertex].X;
-            int dy = new_y1 - (int)vertices[hitVertex].Y;
+            // Взяли и отпустили в одном месте
+            if (new_x == 0 && new_y == 0) return;
 
-            if (dx == 0 && dy == 0) return;
-
-
-            vertices[hitVertex] = new Vertex2D(
-                    vertices[hitVertex].X + dx,
-                    vertices[hitVertex].Y + dy);
-            
+            // Непосредственно перемещение (прорисовка в событии Paint)
+            vertices[hitVertex] = new Vertex2D(new_x, new_y);  
 
             // Redraw.
             SceneView.Invalidate();
         }
 
-        // Finish moving the selected polygon.
+
         private void SceneView_MouseUp_MovingVertex(
             object sender, MouseEventArgs e)
         {
