@@ -33,6 +33,9 @@ namespace _2DAnimationEditor
         private float movingOffsetX;
         private float movingOffsetY;
 
+        //Режимы редактирования
+        private List<CheckBox> modes;
+
 
         public Form1()
         {
@@ -41,7 +44,7 @@ namespace _2DAnimationEditor
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            modes = new List<CheckBox> { checkBoxEdge, checkBoxVertex, checkBoxMoveMode };
         }
 
 
@@ -53,9 +56,15 @@ namespace _2DAnimationEditor
             {
                 
                 //Удаление вершины
-                if (e.Button == MouseButtons.Right && MouseIsOver(vertices[hitVertexIndex]))
+                if (e.Button == MouseButtons.Right)
                 {
-                    vertices.RemoveAt(hitVertexIndex);
+                    if ( hitVertexIndex < vertices.Count)
+                    {
+                        if (MouseIsOver(vertices[hitVertexIndex]))
+                        {
+                            vertices.RemoveAt(hitVertexIndex);
+                        } 
+                    }
                 }
                 else
                 {
@@ -166,22 +175,43 @@ namespace _2DAnimationEditor
             }
         }
 
-
-       
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBoxVertex_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void SceneView_MouseUp(object sender, MouseEventArgs e)
         {
 
+        }
+
+
+        private void checkBoxVertex_CheckedChanged(object sender, EventArgs e)
+        {
+            startMode(sender);
+        }
+
+        
+
+
+        private void checkBoxMoveMode_CheckedChanged(object sender, EventArgs e)
+        {
+            startMode(sender);
+        }
+
+        private void checkBoxEdge_CheckedChanged(object sender, EventArgs e)
+        {
+            startMode(sender);
+        }
+
+        private void startMode(object sender)
+        {
+            CheckBox current = sender as CheckBox;
+            if (current.Checked)
+            {
+                foreach (CheckBox mode in modes)
+                {
+                    if (mode.Name != current.Name)
+                    {
+                        mode.Checked = false;
+                    }
+                }
+            }
         }
     }
 }

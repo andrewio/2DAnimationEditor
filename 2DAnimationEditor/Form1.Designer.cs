@@ -71,6 +71,7 @@
             this.checkBoxEdge.Text = "Edge";
             this.checkBoxEdge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBoxEdge.UseVisualStyleBackColor = true;
+            this.checkBoxEdge.CheckedChanged += new System.EventHandler(this.checkBoxEdge_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -94,6 +95,7 @@
             this.checkBoxMoveMode.Size = new System.Drawing.Size(34, 33);
             this.checkBoxMoveMode.TabIndex = 5;
             this.checkBoxMoveMode.UseVisualStyleBackColor = true;
+            this.checkBoxMoveMode.CheckedChanged += new System.EventHandler(this.checkBoxMoveMode_CheckedChanged);
             // 
             // Form1
             // 
