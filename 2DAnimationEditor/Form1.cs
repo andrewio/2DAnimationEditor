@@ -21,6 +21,10 @@ namespace _2DAnimationEditor
         // Прообраз добавляемой вершины (отображается возле курсора)
         private Vertex2D preImage;
 
+        private int hitVertex;
+        private float offsetX;
+        private float offsetY;
+
 
         public Form1()
         {
@@ -36,14 +40,56 @@ namespace _2DAnimationEditor
         private void SceneView_MouseDown(object sender, MouseEventArgs e)
         {
 
-            //Режим Vertex
+            // Режим Vertex
             if (checkBoxVertex.Checked)
             {
                 this.vertices.Add(new Vertex2D(e.Location));
             }
 
+            // Режим перемещения вершин
+            if (checkBoxMoveMode.Checked)
+            {
+                SceneView.MouseMove += SceneView_MouseMove_MovingVertex;
+                SceneView.MouseUp += SceneView_MouseUp_MovingVertex;
+
+                // Remember the offset from the mouse
+                // to the segment's first point.
+                offsetX = vertices[hitVertex].X - e.X;
+                offsetY = vertices[hitVertex].Y - e.Y;
+            }
+
             // Redraw
             SceneView.Invalidate();
+        }
+
+        private void SceneView_MouseMove_MovingVertex(
+    object sender, MouseEventArgs e)
+        {
+            // See how far the first point will move.
+            int new_x1 = e.X + (int)offsetX;
+            int new_y1 = e.Y + (int)offsetY;
+
+            int dx = new_x1 - (int)vertices[hitVertex].X;
+            int dy = new_y1 - (int)vertices[hitVertex].Y;
+
+            if (dx == 0 && dy == 0) return;
+
+
+            vertices[hitVertex] = new Vertex2D(
+                    vertices[hitVertex].X + dx,
+                    vertices[hitVertex].Y + dy);
+            
+
+            // Redraw.
+            SceneView.Invalidate();
+        }
+
+        // Finish moving the selected polygon.
+        private void SceneView_MouseUp_MovingVertex(
+            object sender, MouseEventArgs e)
+        {
+            SceneView.MouseMove -= SceneView_MouseMove_MovingVertex;
+            SceneView.MouseUp -= SceneView_MouseUp_MovingVertex;
         }
 
 
@@ -52,14 +98,15 @@ namespace _2DAnimationEditor
             // Обновление текущей позиции курсора
             newPoint = e.Location;
 
-
             // Проверка наложения курсора на vertex ...
-            foreach (var vertex in this.vertices)
+            foreach (var vertex in vertices)
             {
                 //Если есть пересечение курсора с вершиной - подсветить ее
-                if (Math.Pow(newPoint.X - vertex.X, 2) + Math.Pow(newPoint.Y - vertex.Y, 2) < Math.Pow(vertex.Radius, 2))
+                if (MouseIsOver(vertex))
                 {
                     vertex.Highlight = true;
+                    hitVertex = vertices.IndexOf(vertex);
+
                 }
                 else
                 {
@@ -70,6 +117,13 @@ namespace _2DAnimationEditor
 
             // Перерисовка
             SceneView.Invalidate();
+        }
+
+        
+        private bool MouseIsOver(Vertex2D vertex)
+        {
+            //Отслеживание наложения курсора
+            return Math.Pow(newPoint.X - vertex.X, 2) + Math.Pow(newPoint.Y - vertex.Y, 2) < Math.Pow(vertex.Radius, 2);
         }
 
 
@@ -102,6 +156,11 @@ namespace _2DAnimationEditor
         }
 
         private void checkBoxVertex_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SceneView_MouseUp(object sender, MouseEventArgs e)
         {
 
         }
