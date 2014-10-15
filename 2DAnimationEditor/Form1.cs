@@ -24,8 +24,8 @@ namespace _2DAnimationEditor
         // Происходит ли в данный момнет перемещение вершины
         private bool vertexMoving = false;
 
-        // Вершина, над которой находится курсор
-        private int hitVertex;
+        // Вершина, над которой в последний раз находился курсор
+        private int hitVertexIndex;
 
         //Для эстетического перемещения вершины
         //При D'n'D вершины: в каком месте пользователь взял вершину,
@@ -51,8 +51,17 @@ namespace _2DAnimationEditor
             // Режим Vertex
             if (checkBoxVertex.Checked)
             {
-                // Добавить к прорисовке новую точку
-                this.vertices.Add(new Vertex2D(e.Location));
+                
+                //Удаление вершины
+                if (e.Button == MouseButtons.Right && MouseIsOver(vertices[hitVertexIndex]))
+                {
+                    vertices.RemoveAt(hitVertexIndex);
+                }
+                else
+                {
+                    // Добавить к прорисовке новую точку
+                    this.vertices.Add(new Vertex2D(e.Location));
+                }
             }
 
             // Режим перемещения вершин
@@ -64,8 +73,8 @@ namespace _2DAnimationEditor
 
                 // Смещение курсора относительно центра
                 // в момент взятия вершины
-                movingOffsetX = vertices[hitVertex].X - e.X;
-                movingOffsetY = vertices[hitVertex].Y - e.Y;
+                movingOffsetX = vertices[hitVertexIndex].X - e.X;
+                movingOffsetY = vertices[hitVertexIndex].Y - e.Y;
             }
 
             // Redraw
@@ -83,7 +92,7 @@ namespace _2DAnimationEditor
             if (new_x == 0 && new_y == 0) return;
 
             // Непосредственно перемещение (прорисовка в событии Paint)
-            vertices[hitVertex] = new Vertex2D(new_x, new_y);  
+            vertices[hitVertexIndex] = new Vertex2D(new_x, new_y);  
 
             // Redraw.
             SceneView.Invalidate();
@@ -115,7 +124,7 @@ namespace _2DAnimationEditor
                 {
                     vertex.Highlight = true;
                     if(!vertexMoving)
-                        hitVertex = vertices.IndexOf(vertex);
+                        hitVertexIndex = vertices.IndexOf(vertex);
 
                 }
                 else
