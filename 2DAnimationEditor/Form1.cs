@@ -14,8 +14,9 @@ namespace _2DAnimationEditor
     public partial class Form1 : Form
     {
 
-        private List<Vertex2D> vertices = new List<Vertex2D>();
-
+        // Все кадры
+        private List<Frame> Animation = new List<Frame>();
+        private int currentFrameIndex = 0;
         // Текущая позиция курсора на компоненте PictureBox
         private Point newPoint;
         // Прообраз добавляемой вершины (отображается возле курсора)
@@ -25,7 +26,7 @@ namespace _2DAnimationEditor
         private bool vertexMoving = false;
 
         // Вершина, над которой в последний раз находился курсор
-        private int hitVertexIndex;
+        private Vertex2D hitVertex;
 
         //Для эстетического перемещения вершины
         //При D'n'D вершины: в каком месте пользователь взял вершину,
@@ -45,6 +46,16 @@ namespace _2DAnimationEditor
         private void Form1_Load(object sender, EventArgs e)
         {
             modes = new List<CheckBox> { checkBoxEdge, checkBoxVertex, checkBoxMoveMode };
+
+            dataGridAnimation.RowCount  = 1;
+            dataGridAnimation.ColumnCount = Convert.ToInt32(this.textBoxFramesCount.Text);
+            //Заполнение номерами кадров
+            for (int i = 0; i < dataGridAnimation.ColumnCount; i++)
+            {
+                dataGridAnimation[i, 0].Value = i;
+                
+            }
+            currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
         }
 
 
@@ -58,18 +69,19 @@ namespace _2DAnimationEditor
                 //Удаление вершины
                 if (e.Button == MouseButtons.Right)
                 {
-                    if ( hitVertexIndex < vertices.Count)
-                    {
-                        if (MouseIsOver(vertices[hitVertexIndex]))
-                        {
-                            vertices.RemoveAt(hitVertexIndex);
-                        } 
-                    }
+                    //if ( hitVertexIndex < frame.Count)
+                    //{
+                    //    if (MouseIsOver(vertices[hitVertexIndex]))
+                    //    {
+                    //        vertices.RemoveAt(hitVertexIndex);
+                    //    } 
+                    //}
                 }
                 else
                 {
-                    // Добавить к прорисовке новую точку
-                    this.vertices.Add(new Vertex2D(e.Location));
+                    //// Добавить к прорисовке новую точку
+                    //this.vertices.Add(new Vertex2D(e.Location));
+                    //Console.WriteLine(vertices[vertices.Count-1]);
                 }
             }
 
@@ -82,8 +94,8 @@ namespace _2DAnimationEditor
 
                 // Смещение курсора относительно центра
                 // в момент взятия вершины
-                movingOffsetX = vertices[hitVertexIndex].X - e.X;
-                movingOffsetY = vertices[hitVertexIndex].Y - e.Y;
+                //movingOffsetX = vertices[hitVertexIndex].X - e.X;
+                //movingOffsetY = vertices[hitVertexIndex].Y - e.Y;
             }
 
             // Redraw
@@ -101,7 +113,7 @@ namespace _2DAnimationEditor
             if (new_x == 0 && new_y == 0) return;
 
             // Непосредственно перемещение (прорисовка в событии Paint)
-            vertices[hitVertexIndex] = new Vertex2D(new_x, new_y);  
+            //[hitVertexIndex] = new Vertex2D(new_x, new_y);  
 
             // Redraw.
             SceneView.Invalidate();
@@ -126,22 +138,22 @@ namespace _2DAnimationEditor
             newPoint = e.Location;
 
             // Проверка наложения курсора на vertex ...
-            foreach (var vertex in vertices)
-            {
-                //Если есть пересечение курсора с вершиной - подсветить ее
-                if (MouseIsOver(vertex))
-                {
-                    vertex.Highlight = true;
-                    if(!vertexMoving)
-                        hitVertexIndex = vertices.IndexOf(vertex);
+            //foreach (var vertex in vertices)
+            //{
+            //    //Если есть пересечение курсора с вершиной - подсветить ее
+            //    if (MouseIsOver(vertex))
+            //    {
+            //        vertex.Highlight = true;
+            //        if(!vertexMoving)
+            //            hitVertexIndex = vertices.IndexOf(vertex);
 
-                }
-                else
-                {
-                    //vertex.Highlight = false;
-                }
+            //    }
+            //    else
+            //    {
+            //        //vertex.Highlight = false;
+            //    }
 
-            }
+            //}
 
             // Перерисовка
             SceneView.Invalidate();
@@ -161,10 +173,10 @@ namespace _2DAnimationEditor
             e.Graphics.Clear(SceneView.BackColor);
 
             // Перерисовка вершин
-            foreach (var vertex in this.vertices)
-            {
-                vertex.DrawBy(e);
-            }
+            //foreach (var vertex in this.vertices)
+            //{
+            //    vertex.DrawBy(e);
+            //}
 
             // Прообраз добавляемой вершины (отображается возле курсора)
             if (checkBoxVertex.Checked)
@@ -185,9 +197,6 @@ namespace _2DAnimationEditor
         {
             startMode(sender);
         }
-
-        
-
 
         private void checkBoxMoveMode_CheckedChanged(object sender, EventArgs e)
         {
@@ -212,6 +221,11 @@ namespace _2DAnimationEditor
                     }
                 }
             }
+        }
+
+        private void dataGridAnimation_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            textBoxCurrentFrame.Text = dataGridAnimation.CurrentCell.ColumnIndex.ToString();
         }
     }
 }
