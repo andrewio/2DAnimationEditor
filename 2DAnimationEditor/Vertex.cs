@@ -14,7 +14,6 @@ namespace _2DAnimationEditor
         private float radiusHighlight;
         private float highlightRate = 1.25f;
 
-
         public float Radius
         {
             get { return radius; }
