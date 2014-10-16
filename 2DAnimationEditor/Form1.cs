@@ -357,7 +357,8 @@ namespace _2DAnimationEditor
         private void buttonSaveAnimation_Click(object sender, EventArgs e)
         {
 
-            //Выыести Хэшкоды
+            //Вывести Хэшкоды
+
             foreach (KeyValuePair<Vertex2D, HashSet<Vertex2D>> KV in Animation[currentFrameIndex].Vertices)
             {
                 Console.WriteLine();
@@ -368,9 +369,6 @@ namespace _2DAnimationEditor
                 }
                 Console.WriteLine();
             }
-
-
-
 
             // Пронумеровать вершины для каждого кадра,
             // опираясь на их Хэшкоды
@@ -414,40 +412,6 @@ namespace _2DAnimationEditor
             }
             
             
-            #region
-            /*
-            // По упрощенному списку смежности 
-            for (int vertexIndex = 0;
-                    vertexIndex < Animation[currentFrameIndex].VerticesHashCodes.Count;
-                    vertexIndex++)
-            {
-                int currentHashCode = Animation[currentFrameIndex].VerticesHashCodes[vertexIndex];
-
-                // По расширенному списку смежности     
-                foreach (var vert in Animation[currentFrameIndex].Vertices)
-                {
-                    // Ищем в соседях всех вершин этот Хэшкод
-                    foreach (var neighbour in vert.Value)
-                    {
-                        int neighbourHashCode = neighbour.GetHashCode();
-
-                        if (neighbourHashCode == currentHashCode)
-                        {
-                            
-                            int keyHashCode = vert.Key.GetHashCode();
-                            int keyIndex = Animation[currentFrameIndex].VerticesHashCodes.IndexOf(keyHashCode);
-                            // Найти индекс соседа 
-                            int neighbourIndex = Animation[currentFrameIndex].VerticesHashCodes.IndexOf(neighbourHashCode);
-                            // Добавить индекс соседа
-                            Animation[currentFrameIndex].AdjacencyList[keyIndex].Add(neighbourIndex);
-                        }
-                    }
-                }
-                
-            } // end for
-             */
-            #endregion
-
             //Распечатать список смежности
             foreach (KeyValuePair<int, HashSet<int>> KV in Animation[currentFrameIndex].AdjacencyList)
             {
