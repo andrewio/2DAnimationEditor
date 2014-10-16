@@ -17,18 +17,18 @@ namespace _2DAnimationEditor
         // Все кадры
         private List<Frame> Animation = new List<Frame>();
         private int currentFrameIndex = 0;
+
         // Текущая позиция курсора на компоненте PictureBox
         private Point newPoint;
         // Прообраз добавляемой вершины (отображается возле курсора)
         private Vertex2D preImage;
+        // Вершина, над которой в последний раз находился курсор
+        private Vertex2D hitVertex;
 
         // Происходит ли в данный момнет перемещение вершины
         private bool vertexMoving = false;
         // Происходит ли в данный момнет cсоздании грани 
         private bool edgeCreating = false;
-
-        // Вершина, над которой в последний раз находился курсор
-        private Vertex2D hitVertex;
 
         // Для эстетического перемещения вершины
         // При D'n'D вершины: в каком месте пользователь взял вершину,
@@ -50,6 +50,7 @@ namespace _2DAnimationEditor
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
+            // Переключение между кадрами
             if (Char.ToUpper(e.KeyChar) == (char)Keys.A && currentFrameIndex > 0)
             {
                 currentFrameIndex--;
@@ -138,6 +139,7 @@ namespace _2DAnimationEditor
                 movingOffsetY = hitVertex.Y - e.Y;
             }
 
+            //Режим добалвения граней
             if (checkBoxEdge.Checked)
             {            
                 if (MouseIsOver(hitVertex))
@@ -148,6 +150,7 @@ namespace _2DAnimationEditor
                         SceneView.MouseUp += SceneView_MouseUp_EdgeCreating;
                 }              
             }
+
             // Redraw
             SceneView.Invalidate();
         }
@@ -226,6 +229,7 @@ namespace _2DAnimationEditor
                 Animation[currentFrameIndex].Vertices[Edge[1]].Add(Edge[0]);
             }
 
+            //Закончить добаление ребра
             Edge.Clear();
             edgeCreating = false;
             
@@ -267,7 +271,6 @@ namespace _2DAnimationEditor
             return Math.Pow(newPoint.X - vertex.X, 2) + Math.Pow(newPoint.Y - vertex.Y, 2) < Math.Pow(vertex.Radius, 2);
         }
 
-
         private void checkBoxVertex_CheckedChanged(object sender, EventArgs e)
         {
             startMode(sender);
@@ -285,6 +288,8 @@ namespace _2DAnimationEditor
 
         private void startMode(object sender)
         {
+            // Менеджер режимов редактирования
+            // Включение одного - влечет отключение остальных
             CheckBox current = sender as CheckBox;
             if (current.Checked)
             {
@@ -299,6 +304,7 @@ namespace _2DAnimationEditor
         }
         private void dataGridAnimation_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            //Динамическое отображение номера текущего кадра
             currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
             textBoxCurrentFrame.Text = currentFrameIndex.ToString();
 
@@ -308,6 +314,7 @@ namespace _2DAnimationEditor
         }
         private void buttonSetFramesCount_Click(object sender, EventArgs e)
         {
+            /* Установка количества кадров */
             dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
             currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
             textBoxCurrentFrame.Text = currentFrameIndex.ToString();
