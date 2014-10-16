@@ -56,7 +56,6 @@
             this.SceneView.Paint += new System.Windows.Forms.PaintEventHandler(this.SceneView_Paint);
             this.SceneView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SceneView_MouseDown);
             this.SceneView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.SceneView_MouseMove);
-            this.SceneView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SceneView_MouseUp);
             // 
             // checkBoxVertex
             // 
@@ -121,7 +120,6 @@
             this.dataGridAnimation.Size = new System.Drawing.Size(727, 45);
             this.dataGridAnimation.TabIndex = 6;
             this.dataGridAnimation.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridAnimation_CellClick);
-            this.dataGridAnimation.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridAnimation_CellEnter);
             // 
             // groupBox2
             // 

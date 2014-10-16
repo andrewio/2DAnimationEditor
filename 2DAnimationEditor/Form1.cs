@@ -48,6 +48,24 @@ namespace _2DAnimationEditor
             InitializeComponent();
         }
 
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (Char.ToUpper(e.KeyChar) == (char)Keys.A && currentFrameIndex > 0)
+            {
+                currentFrameIndex--;
+                dataGridAnimation.ClearSelection();
+                dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
+                textBoxCurrentFrame.Text = (currentFrameIndex).ToString();
+            }
+            else if (Char.ToUpper(e.KeyChar) == (char)Keys.D && currentFrameIndex < dataGridAnimation.ColumnCount - 1)
+            {
+                currentFrameIndex++;
+                dataGridAnimation.ClearSelection();
+                dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
+                textBoxCurrentFrame.Text = (currentFrameIndex).ToString();
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             modes = new List<CheckBox> { checkBoxEdge, checkBoxVertex, checkBoxMoveMode };
@@ -134,6 +152,62 @@ namespace _2DAnimationEditor
             SceneView.Invalidate();
         }
 
+        private void SceneView_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Обновление текущей позиции курсора
+            newPoint = e.Location;
+
+            // Проверка наложения курсора на vertex ...
+            foreach (var vertex in Animation[currentFrameIndex].Vertices)
+            {
+
+                //Если есть пересечение курсора с вершиной - подсветить ее
+                if (MouseIsOver(vertex.Key))
+                {
+                    vertex.Key.Highlight = true;
+                    if (!vertexMoving)
+                        hitVertex = vertex.Key;
+
+                    //Console.WriteLine("Пересечение: " + hitVertex.X.ToString() + " " + hitVertex.Y.ToString());
+                    //Console.WriteLine("Пересечение: " + vertex.Key.X.ToString() + " " + vertex.Key.Y.ToString());
+
+                }
+
+            }
+
+            // Перерисовка
+            SceneView.Invalidate();
+        }
+
+        private void SceneView_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.Clear(SceneView.BackColor);
+
+            //Перерисовка вершин и ребер
+
+            foreach (var vert in Animation[currentFrameIndex].Vertices)
+            {
+                //Console.WriteLine("Перерисовка: " + vert.Key.X + " " + vert.Key.Y);
+                vert.Key.DrawBy(e);
+
+                // соседи
+                foreach (var neighbour in vert.Value)
+                {
+                    e.Graphics.DrawLine(Pens.Red, vert.Key.GetPoint(), neighbour.GetPoint());
+                }
+
+            }
+
+            // Прообраз добавляемой вершины (отображается возле курсора)
+            if (checkBoxVertex.Checked)
+            {
+                preImage = new Vertex2D(newPoint);
+                preImage.DrawBy(e);
+
+            }
+        }
+
         private void SceneView_MouseUp_EdgeCreating(
             object sender, MouseEventArgs e)
         {
@@ -176,7 +250,6 @@ namespace _2DAnimationEditor
             SceneView.Invalidate();
         }
 
-
         private void SceneView_MouseUp_MovingVertex(
             object sender, MouseEventArgs e)
         {
@@ -187,75 +260,11 @@ namespace _2DAnimationEditor
             vertexMoving = false;
 
         }
-
-
-        private void SceneView_MouseMove(object sender, MouseEventArgs e)
-        {
-            // Обновление текущей позиции курсора
-            newPoint = e.Location;
-
-            // Проверка наложения курсора на vertex ...
-            foreach (var vertex in Animation[currentFrameIndex].Vertices)
-            {
-
-                //Если есть пересечение курсора с вершиной - подсветить ее
-                if (MouseIsOver(vertex.Key))
-                {
-                    vertex.Key.Highlight = true;
-                    if (!vertexMoving)
-                        hitVertex = vertex.Key;
-
-                    //Console.WriteLine("Пересечение: " + hitVertex.X.ToString() + " " + hitVertex.Y.ToString());
-                    //Console.WriteLine("Пересечение: " + vertex.Key.X.ToString() + " " + vertex.Key.Y.ToString());
-
-                }
-
-            }
-
-            // Перерисовка
-            SceneView.Invalidate();
-        }
-
         
         private bool MouseIsOver(Vertex2D vertex)
         {
             //Отслеживание наложения курсора
             return Math.Pow(newPoint.X - vertex.X, 2) + Math.Pow(newPoint.Y - vertex.Y, 2) < Math.Pow(vertex.Radius, 2);
-        }
-
-
-        private void SceneView_Paint(object sender, PaintEventArgs e)
-        {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.Clear(SceneView.BackColor);
-
-            //Перерисовка вершин и ребер
-
-            foreach (var vert in Animation[currentFrameIndex].Vertices)
-            {
-                //Console.WriteLine("Перерисовка: " + vert.Key.X + " " + vert.Key.Y);
-                vert.Key.DrawBy(e);
-                
-                // соседи
-                foreach (var neighbour in vert.Value)
-                {
-                    e.Graphics.DrawLine(Pens.Red, vert.Key.GetPoint(), neighbour.GetPoint());
-                }
-                
-            }
-
-            // Прообраз добавляемой вершины (отображается возле курсора)
-            if (checkBoxVertex.Checked)
-            {
-                preImage = new Vertex2D(newPoint);
-                preImage.DrawBy(e);
-
-            }
-        }
-
-        private void SceneView_MouseUp(object sender, MouseEventArgs e)
-        {
-
         }
 
 
@@ -288,45 +297,24 @@ namespace _2DAnimationEditor
                 }
             }
         }
-
-        private void dataGridAnimation_CellEnter(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
-
-        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Char.ToUpper(e.KeyChar) == (char)Keys.A && currentFrameIndex > 0)
-            {
-                currentFrameIndex--;
-                dataGridAnimation.ClearSelection();
-                dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
-                textBoxCurrentFrame.Text = (currentFrameIndex).ToString();          
-            }
-            else if (Char.ToUpper(e.KeyChar) == (char)Keys.D && currentFrameIndex < dataGridAnimation.ColumnCount - 1)
-            {
-                currentFrameIndex++;
-                dataGridAnimation.ClearSelection();
-                dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
-                textBoxCurrentFrame.Text = (currentFrameIndex).ToString();
-            }
-
-            
-        }
-
         private void dataGridAnimation_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
             textBoxCurrentFrame.Text = currentFrameIndex.ToString();
+
+            //Загрузка кадра
+            SceneView.Invalidate();
+
         }
-
-
         private void buttonSetFramesCount_Click(object sender, EventArgs e)
         {
             dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
             currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
             textBoxCurrentFrame.Text = currentFrameIndex.ToString();
             SetFramesNumbers();
+            //Добавление или обрезание кадров к анимации
+            
+            
         }
     }
 }
