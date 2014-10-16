@@ -39,11 +39,15 @@
             this.textBoxFramesCount = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxCurrentFrame = new System.Windows.Forms.TextBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.buttonSaveAnimation = new System.Windows.Forms.Button();
+            this.buttonLoadAnimation = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.SceneView)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridAnimation)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // SceneView
@@ -125,9 +129,9 @@
             // 
             this.groupBox2.Controls.Add(this.buttonSetFramesCount);
             this.groupBox2.Controls.Add(this.textBoxFramesCount);
-            this.groupBox2.Location = new System.Drawing.Point(751, 215);
+            this.groupBox2.Location = new System.Drawing.Point(745, 209);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(136, 51);
+            this.groupBox2.Size = new System.Drawing.Size(142, 57);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Frames count";
@@ -154,9 +158,9 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.textBoxCurrentFrame);
-            this.groupBox3.Location = new System.Drawing.Point(751, 272);
+            this.groupBox3.Location = new System.Drawing.Point(745, 266);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(136, 51);
+            this.groupBox3.Size = new System.Drawing.Size(142, 57);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Current Frame";
@@ -169,11 +173,42 @@
             this.textBoxCurrentFrame.Size = new System.Drawing.Size(81, 25);
             this.textBoxCurrentFrame.TabIndex = 0;
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.buttonLoadAnimation);
+            this.groupBox4.Controls.Add(this.buttonSaveAnimation);
+            this.groupBox4.Location = new System.Drawing.Point(746, 119);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(141, 84);
+            this.groupBox4.TabIndex = 9;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Animation";
+            // 
+            // buttonSaveAnimation
+            // 
+            this.buttonSaveAnimation.Location = new System.Drawing.Point(7, 20);
+            this.buttonSaveAnimation.Name = "buttonSaveAnimation";
+            this.buttonSaveAnimation.Size = new System.Drawing.Size(127, 24);
+            this.buttonSaveAnimation.TabIndex = 0;
+            this.buttonSaveAnimation.Text = "Save";
+            this.buttonSaveAnimation.UseVisualStyleBackColor = true;
+            this.buttonSaveAnimation.Click += new System.EventHandler(this.buttonSaveAnimation_Click);
+            // 
+            // buttonLoadAnimation
+            // 
+            this.buttonLoadAnimation.Location = new System.Drawing.Point(7, 50);
+            this.buttonLoadAnimation.Name = "buttonLoadAnimation";
+            this.buttonLoadAnimation.Size = new System.Drawing.Size(127, 24);
+            this.buttonLoadAnimation.TabIndex = 1;
+            this.buttonLoadAnimation.Text = "Load";
+            this.buttonLoadAnimation.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(896, 335);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.dataGridAnimation);
@@ -191,6 +226,7 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -208,6 +244,9 @@
         private System.Windows.Forms.TextBox textBoxFramesCount;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBoxCurrentFrame;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button buttonLoadAnimation;
+        private System.Windows.Forms.Button buttonSaveAnimation;
     }
 }
 

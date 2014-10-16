@@ -337,5 +337,10 @@ namespace _2DAnimationEditor
             
             
         }
+
+        private void buttonSaveAnimation_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
