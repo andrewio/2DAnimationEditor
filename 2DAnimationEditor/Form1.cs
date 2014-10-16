@@ -57,6 +57,7 @@ namespace _2DAnimationEditor
                 dataGridAnimation.ClearSelection();
                 dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
                 textBoxCurrentFrame.Text = (currentFrameIndex).ToString();
+                SceneView.Invalidate();
             }
             else if (Char.ToUpper(e.KeyChar) == (char)Keys.D && currentFrameIndex < dataGridAnimation.ColumnCount - 1)
             {
@@ -64,6 +65,7 @@ namespace _2DAnimationEditor
                 dataGridAnimation.ClearSelection();
                 dataGridAnimation.Rows[dataGridAnimation.CurrentCell.RowIndex].Cells[currentFrameIndex].Selected = true;
                 textBoxCurrentFrame.Text = (currentFrameIndex).ToString();
+                SceneView.Invalidate();
             }
         }
 
@@ -315,10 +317,22 @@ namespace _2DAnimationEditor
         private void buttonSetFramesCount_Click(object sender, EventArgs e)
         {
             /* Установка количества кадров */
-            dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
-            currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
-            textBoxCurrentFrame.Text = currentFrameIndex.ToString();
-            SetFramesNumbers();
+            try
+            {
+                dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
+                currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
+                textBoxCurrentFrame.Text = currentFrameIndex.ToString();
+                SetFramesNumbers();
+            }
+            catch (Exception)
+            {
+
+                string caption = "Ошибка!";
+                string message = "Неверный формат ввода данных.";
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBox.Show(message, caption, buttons);
+            }
+            
             //Добавление или обрезание кадров к анимации
             
             
