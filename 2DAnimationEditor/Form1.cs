@@ -46,22 +46,6 @@ namespace _2DAnimationEditor
         public Form1()
         {
             InitializeComponent();
-
-            //Tests
-
-            Vertex2D a = new Vertex2D(4, 4);
-            Vertex2D b = a;
-            Console.WriteLine(a.GetHashCode() + " " + b.GetHashCode());
-
-            HashSet<Vertex2D> hs = new HashSet<Vertex2D> { a, b };
-            Console.WriteLine("Count: {0}", hs.Count);
-            foreach (var item in hs)
-            {
-                Console.Write(item.GetHashCode() + " ");
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("---------------------------");
         }
 
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
@@ -358,8 +342,70 @@ namespace _2DAnimationEditor
         {
 
             //Вывести Хэшкоды
+            //PrintHashCodes();
 
-            foreach (KeyValuePair<Vertex2D, HashSet<Vertex2D>> KV in Animation[currentFrameIndex].Vertices)
+            for (int frameIndex = 0; frameIndex < Animation.Count; frameIndex++)
+            {
+                CreateAdjecencyListForFrame(frameIndex);
+                //Распечатать список смежности
+                PrintAdjacencyList(frameIndex);
+
+                Console.WriteLine("\nКадр №{0}\n",frameIndex);
+
+            }
+            
+            
+
+        } // end Save Button Click
+
+        private void CreateAdjecencyListForFrame(int frameIndex)
+        {
+            // Пронумеровать вершины для каждого кадра,
+            // опираясь на их Хэшкоды
+            Animation[frameIndex].VerticesHashCodes = new List<int>();
+
+            foreach (var vert in Animation[frameIndex].Vertices)
+            {
+                Animation[frameIndex].VerticesHashCodes.Add(vert.Key.GetHashCode());
+            }
+
+            //printArray(Animation[frameIndex].VerticesHashCodes);
+
+            // ***Составить список смежности (упрощенный)
+
+            // Начальная init
+            Animation[frameIndex].AdjacencyList = new Dictionary<int, HashSet<int>>();
+
+            for (int i = 0; i < Animation[frameIndex].VerticesHashCodes.Count; i++)
+            {
+                Animation[frameIndex].AdjacencyList.Add(i, new HashSet<int>());
+            }// end Начальныая init
+
+
+            int keyHashCode, keyIndex, neighbourHashCode, neighbourIndex;
+            // По расширенному списку смежности     
+            foreach (var vert in Animation[frameIndex].Vertices)
+            {
+                keyHashCode = vert.Key.GetHashCode();
+                keyIndex = Animation[frameIndex].VerticesHashCodes.IndexOf(keyHashCode);
+
+                // Ищем в соседях всех вершин этот Хэшкод
+                foreach (var neighbour in vert.Value)
+                {
+                    neighbourHashCode = neighbour.GetHashCode();
+                    neighbourIndex = Animation[frameIndex].VerticesHashCodes.IndexOf(neighbourHashCode);
+
+                    // Добавить индекс соседа
+                    Animation[frameIndex].AdjacencyList[keyIndex].Add(neighbourIndex);
+
+                }
+
+            }
+        }
+
+        private void PrintHashCodes(int frame)
+        {
+            foreach (KeyValuePair<Vertex2D, HashSet<Vertex2D>> KV in Animation[frame].Vertices)
             {
                 Console.WriteLine();
                 Console.WriteLine(KV.Key.GetHashCode() + ":");
@@ -369,51 +415,11 @@ namespace _2DAnimationEditor
                 }
                 Console.WriteLine();
             }
+        }
 
-            // Пронумеровать вершины для каждого кадра,
-            // опираясь на их Хэшкоды
-            Animation[currentFrameIndex].VerticesHashCodes = new List<int>();
-
-            foreach (var vert in Animation[currentFrameIndex].Vertices)
-	        {
-                Animation[currentFrameIndex].VerticesHashCodes.Add(vert.Key.GetHashCode());
-	        }
-
-            printArray(Animation[currentFrameIndex].VerticesHashCodes);
-
-            // ***Составить список смежности (упрощенный)
-
-            // Начальная init
-            Animation[currentFrameIndex].AdjacencyList = new Dictionary<int, HashSet<int>>();
-           
-            for (int i = 0; i < Animation[currentFrameIndex].VerticesHashCodes.Count; i++)
-            {
-                Animation[currentFrameIndex].AdjacencyList.Add(i, new HashSet<int>());
-            }// end Начальныая init
-            
-            
-             // По расширенному списку смежности     
-            foreach (var vert in Animation[currentFrameIndex].Vertices)
-            {
-                int keyHashCode = vert.Key.GetHashCode();
-                int keyIndex = Animation[currentFrameIndex].VerticesHashCodes.IndexOf(keyHashCode);
-                           
-                // Ищем в соседях всех вершин этот Хэшкод
-                foreach (var neighbour in vert.Value)
-                {
-                    int neighbourHashCode = neighbour.GetHashCode();
-                    int neighbourIndex = Animation[currentFrameIndex].VerticesHashCodes.IndexOf(neighbourHashCode);
-
-                    // Добавить индекс соседа
-                    Animation[currentFrameIndex].AdjacencyList[keyIndex].Add(neighbourIndex);
-                        
-                }
-
-            }
-            
-            
-            //Распечатать список смежности
-            foreach (KeyValuePair<int, HashSet<int>> KV in Animation[currentFrameIndex].AdjacencyList)
+        private void PrintAdjacencyList(int frame)
+        {
+            foreach (KeyValuePair<int, HashSet<int>> KV in Animation[frame].AdjacencyList)
             {
                 Console.WriteLine("\n" + KV.Key + ":");
                 foreach (var item in KV.Value)
@@ -421,9 +427,7 @@ namespace _2DAnimationEditor
                     Console.Write("{0} ", item);
                 }
             }
-
-           
-        } // end Save Button Click
+        }
 
         public void printArray<T>(IEnumerable<T> a)
         {
