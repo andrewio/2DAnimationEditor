@@ -153,7 +153,7 @@
             this.textBoxFramesCount.Name = "textBoxFramesCount";
             this.textBoxFramesCount.Size = new System.Drawing.Size(81, 25);
             this.textBoxFramesCount.TabIndex = 0;
-            this.textBoxFramesCount.Text = "20";
+            this.textBoxFramesCount.Text = "5";
             // 
             // groupBox3
             // 

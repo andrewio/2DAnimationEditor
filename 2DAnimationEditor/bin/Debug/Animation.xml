@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animation>
+  <Frame>
+    <Vertices>
+      <Vertex X="182" Y="39" ID="0" />
+      <Vertex X="299" Y="41" ID="1" />
+      <Vertex X="439" Y="41" ID="2" />
+    </Vertices>
+  </Frame>
+  <Frame>
+    <Vertices>
+      <Vertex X="202" Y="149" ID="0" />
+    </Vertices>
+  </Frame>
+  <Frame>
+    <Vertices>
+      <Vertex X="272" Y="145" ID="0" />
+      <Vertex X="528" Y="110" ID="1" />
+      <Vertex X="514" Y="162" ID="2" />
+    </Vertices>
+  </Frame>
+  <Frame>
+    <Vertices />
+  </Frame>
+  <Frame>
+    <Vertices>
+      <Vertex X="471" Y="143" ID="0" />
+    </Vertices>
+  </Frame>
+</Animation>
