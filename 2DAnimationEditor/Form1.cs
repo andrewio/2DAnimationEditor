@@ -522,18 +522,72 @@ namespace _2DAnimationEditor
 
             if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                for (int frameIndex = 0; frameIndex < Animation.Count; frameIndex++)
-                {
-                    CreateAdjecencyListForFrame(frameIndex);
-                    //Распечатать список смежности
-                    PrintAdjacencyList(frameIndex);
+                
+                //Console.WriteLine("\nКадр №{0}\n", frameIndex);
 
-                    Console.WriteLine("\nКадр №{0}\n", frameIndex);
+                string fileName = OpenFileDialog1.FileName;
+
+                //Создать новую анимация
+                Animation = new List<Frame>();
+                //Считать Xml Document
+                XmlDocument doc = new System.Xml.XmlDocument();
+                doc.Load(fileName);
+                //Считать количество кадров
+                XmlNodeList frameNodes = doc.SelectNodes("/Animation/Frame");
+
+                //Заполнить пустыми кадрами
+                for (int  frameIndex = 0; frameIndex < frameNodes.Count; frameIndex++)
+                {
+                    Animation.Add(new Frame());
                 }
 
+                //Заполнить упрощенные списки смежности
+                //Считать вершины в кадр (без соседей)
+                foreach (XmlNode frame in frameNodes)
+                {
+                    //Каждый кадр
+                    int frameID = Int32.Parse(frame.Attributes["ID"].Value);
+                    XmlNodeList vertices = frame.ChildNodes[0].ChildNodes;
 
-            }
-        }
+                    //Начальная init VerticesHashCodes & AdjacencyList
+                    Animation[frameID].VerticesHashCodes = new List<int>();
+                    Animation[frameID].AdjacencyList = new Dictionary<int, HashSet<int>>();
+                    for (int j = 0; j < vertices.Count; j++)
+                    {
+                        Animation[frameID].VerticesHashCodes.Add(-1);
+                        Animation[frameID].AdjacencyList.Add(j, new HashSet<int>());
+                    }
+
+                    //Инициализация вершин, и их Хэшкодов, без списка соседей
+                    foreach(XmlNode vert in vertices)
+                    {
+                        float x = Int32.Parse(vert.Attributes["X"].Value);
+                        float y = Int32.Parse(vert.Attributes["Y"].Value);
+                        int id = Int32.Parse(vert.Attributes["ID"].Value);
+
+                        Vertex2D newVertex = new Vertex2D(x, y);
+                        Animation[frameID].Vertices.Add(newVertex, new HashSet<Vertex2D>());
+                        Animation[frameID].VerticesHashCodes[id] = newVertex.GetHashCode();
+
+                        //Считать упрощенный список смежности
+                        //Добавить его к текущему кадру
+                        foreach (XmlNode neighbour in vert.ChildNodes)
+                        {
+                            Animation[frameID].AdjacencyList[id].Add(int.Parse(neighbour.InnerText));
+                        }
+
+                    }
+                    
+                } //end xml read
+                // Есть вершины и их хэщкоды, упрощенный список смежности
+
+                // Заполнить соседей
+
+
+
+            }// end if - openFileDialog
+
+        }//end click
 
     }
 }
