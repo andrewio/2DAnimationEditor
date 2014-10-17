@@ -2,21 +2,36 @@
 <Animation>
   <Frame>
     <Vertices>
-      <Vertex X="182" Y="39" ID="0" />
-      <Vertex X="299" Y="41" ID="1" />
-      <Vertex X="439" Y="41" ID="2" />
+      <Vertex X="218" Y="63" ID="0">
+        <Neighbour>3</Neighbour>
+        <Neighbour>1</Neighbour>
+        <Neighbour>2</Neighbour>
+      </Vertex>
+      <Vertex X="208" Y="165" ID="1">
+        <Neighbour>0</Neighbour>
+        <Neighbour>2</Neighbour>
+        <Neighbour>3</Neighbour>
+      </Vertex>
+      <Vertex X="495" Y="165" ID="2">
+        <Neighbour>0</Neighbour>
+        <Neighbour>3</Neighbour>
+        <Neighbour>1</Neighbour>
+      </Vertex>
+      <Vertex X="470" Y="71" ID="3">
+        <Neighbour>0</Neighbour>
+        <Neighbour>2</Neighbour>
+        <Neighbour>1</Neighbour>
+      </Vertex>
     </Vertices>
   </Frame>
   <Frame>
     <Vertices>
-      <Vertex X="202" Y="149" ID="0" />
-    </Vertices>
-  </Frame>
-  <Frame>
-    <Vertices>
-      <Vertex X="272" Y="145" ID="0" />
-      <Vertex X="528" Y="110" ID="1" />
-      <Vertex X="514" Y="162" ID="2" />
+      <Vertex X="315" Y="54" ID="0">
+        <Neighbour>1</Neighbour>
+      </Vertex>
+      <Vertex X="506" Y="107" ID="1">
+        <Neighbour>0</Neighbour>
+      </Vertex>
     </Vertices>
   </Frame>
   <Frame>
@@ -24,7 +39,19 @@
   </Frame>
   <Frame>
     <Vertices>
-      <Vertex X="471" Y="143" ID="0" />
+      <Vertex X="209" Y="84" ID="0" />
+      <Vertex X="520" Y="109" ID="1" />
+      <Vertex X="488" Y="146" ID="2" />
+      <Vertex X="670" Y="79" ID="3" />
+      <Vertex X="397" Y="37" ID="4" />
+      <Vertex X="391" Y="39" ID="5" />
+      <Vertex X="376" Y="113" ID="6" />
+      <Vertex X="301" Y="155" ID="7" />
+      <Vertex X="191" Y="160" ID="8" />
+      <Vertex X="324" Y="216" ID="9" />
     </Vertices>
+  </Frame>
+  <Frame>
+    <Vertices />
   </Frame>
 </Animation>

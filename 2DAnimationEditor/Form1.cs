@@ -402,7 +402,14 @@ namespace _2DAnimationEditor
                         keyHashCode = vert.Key.GetHashCode();
                         keyIndex = frame.VerticesHashCodes.IndexOf(keyHashCode);
                         attributeID.Value = keyIndex.ToString();
-                        xmlElementVertex.Attributes.Append(attributeID); 
+                        xmlElementVertex.Attributes.Append(attributeID);
+
+                        foreach (var neighbour in frame.AdjacencyList[keyIndex])
+                        {
+                            XmlNode xmlElementNeighbour = document.CreateElement("Neighbour");
+                            xmlElementNeighbour.InnerText = neighbour.ToString();
+                            xmlElementVertex.AppendChild(xmlElementNeighbour);
+                        }
 
                     }
 
