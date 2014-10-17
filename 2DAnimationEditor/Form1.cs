@@ -29,8 +29,6 @@ namespace _2DAnimationEditor
 
         // Происходит ли в данный момнет перемещение вершины
         private bool vertexMoving = false;
-        // Происходит ли в данный момнет cсоздании грани 
-        private bool edgeCreating = false;
 
         // Для эстетического перемещения вершины
         // При D'n'D вершины: в каком месте пользователь взял вершину,
@@ -148,7 +146,6 @@ namespace _2DAnimationEditor
             {            
                 if (MouseIsOver(hitVertex))
                 {
-                    edgeCreating = true;
                     Edge.Add(hitVertex);
                     if (Edge.Count == 2)
                         SceneView.MouseUp += SceneView_MouseUp_EdgeCreating;
@@ -235,7 +232,6 @@ namespace _2DAnimationEditor
 
             //Закончить добаление ребра
             Edge.Clear();
-            edgeCreating = false;
             
         }
 
@@ -321,10 +317,26 @@ namespace _2DAnimationEditor
             /* Установка количества кадров */
             try
             {
-                dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
-                currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
-                textBoxCurrentFrame.Text = currentFrameIndex.ToString();
-                SetFramesNumbers();
+                setAnimationUI();
+
+                int difference = dataGridAnimation.ColumnCount - Animation.Count;
+                //Добавить или удалить кадры
+                if (difference > 0)
+                {
+                    for (int i = 0; i < difference; i++)
+                    {
+                        Animation.Add(new Frame());
+                    }
+                }
+                else if (difference < 0)
+                {
+                    for (int i = 0; i < Math.Abs(difference); i++)
+                    {
+                        // удаление последнего
+                        Animation.RemoveAt(Animation.Count - 1);
+                    }
+                }
+
             }
             catch (Exception)
             {
@@ -338,6 +350,14 @@ namespace _2DAnimationEditor
             //Добавление или обрезание кадров к анимации
             
             
+        }
+
+        private void setAnimationUI()
+        {
+            dataGridAnimation.ColumnCount = Int32.Parse(textBoxFramesCount.Text);
+            currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
+            textBoxCurrentFrame.Text = currentFrameIndex.ToString();
+            SetFramesNumbers();
         }
 
         private void buttonSaveAnimation_Click(object sender, EventArgs e)
@@ -364,72 +384,63 @@ namespace _2DAnimationEditor
 
                 // ***Запись в файл
                 string fileName = saveFileDialog1.FileName;
-                GenerateAnimationXml(fileName);
+
+                try
+                {
+                    XmlAnimationHandler.GenerateAnimationXml(Animation, fileName);
+                }
+                catch (Exception)
+                {
+
+                    string caption = "Ошибка!";
+                    string message = "Запись невозможна";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBox.Show(message, caption, buttons);
+                }
 
             }
             
 
         } // end Save Button Click
 
-        private void GenerateAnimationXml(string fileName)
+
+        private void buttonLoadAnimation_Click(object sender, EventArgs e)
         {
+            //Выбор директории для файла
+            OpenFileDialog OpenFileDialog1 = new OpenFileDialog();
+            OpenFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
 
-            //Создание заготовочного файла с root элементом
-            XmlTextWriter textWritter = new XmlTextWriter(fileName, Encoding.UTF8);
-            textWritter.WriteStartDocument();
-            textWritter.WriteStartElement("Animation");
-            textWritter.WriteEndElement();
-            textWritter.Close();
+            // Задание возможных расширений для файла
+            OpenFileDialog1.Filter = "txt files (*.xml)|*.xml| (*.*)|*.*";
+            OpenFileDialog1.FileName = "Animation";
 
-            XmlDocument document = new XmlDocument();
-            document.Load(fileName);
-
-            foreach (var frame in Animation)
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                XmlNode xmlElementFrame = document.CreateElement("Frame");
-                document.DocumentElement.AppendChild(xmlElementFrame);
 
-                XmlAttribute frameID = document.CreateAttribute("ID");
-                frameID.Value = Animation.IndexOf(frame).ToString();
-                xmlElementFrame.Attributes.Append(frameID);
-
-                XmlNode xmlElementVertices = document.CreateElement("Vertices");
-                xmlElementFrame.AppendChild(xmlElementVertices);
-
-
-                int keyHashCode, keyIndex;
-                // По расширенному списку смежности     
-                foreach (var vert in frame.Vertices)
+                string fileName = OpenFileDialog1.FileName;
+                try
                 {
-                    XmlNode xmlElementVertex = document.CreateElement("Vertex");
-                    xmlElementVertices.AppendChild(xmlElementVertex);
-
-                    XmlAttribute attributeX = document.CreateAttribute("X");
-                    attributeX.Value = vert.Key.X.ToString();
-                    xmlElementVertex.Attributes.Append(attributeX);
-
-                    XmlAttribute attributeY = document.CreateAttribute("Y");
-                    attributeY.Value = vert.Key.Y.ToString();
-                    xmlElementVertex.Attributes.Append(attributeY);
-
-                    XmlAttribute attributeID = document.CreateAttribute("ID");
-                    keyHashCode = vert.Key.GetHashCode();
-                    keyIndex = frame.VerticesHashCodes.IndexOf(keyHashCode);
-                    attributeID.Value = keyIndex.ToString();
-                    xmlElementVertex.Attributes.Append(attributeID);
-
-                    foreach (var neighbour in frame.AdjacencyList[keyIndex])
-                    {
-                        XmlNode xmlElementNeighbour = document.CreateElement("Neighbour");
-                        xmlElementNeighbour.InnerText = neighbour.ToString();
-                        xmlElementVertex.AppendChild(xmlElementNeighbour);
-                    }
-
+                    Animation = XmlAnimationHandler.LoadAnimationFromXml(fileName);
+                    dataGridAnimation.ColumnCount = Animation.Count;
+                    textBoxFramesCount.Text = Animation.Count.ToString();
+                    currentFrameIndex = dataGridAnimation.CurrentCell.ColumnIndex;
+                    textBoxCurrentFrame.Text = currentFrameIndex.ToString();
+                    
+                    SetFramesNumbers();
                 }
-            }
+                catch (Exception)
+                {
 
-            document.Save(fileName);
-        }
+                    string caption = "Ошибка!";
+                    string message = "Неверный формат данных";
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBox.Show(message, caption, buttons);
+                }
+
+            }// end if - openFileDialog
+
+        }//end click
+
 
         private void CreateAdjecencyListForFrame(int frameIndex)
         {
@@ -510,84 +521,6 @@ namespace _2DAnimationEditor
             }
         }
 
-        private void buttonLoadAnimation_Click(object sender, EventArgs e)
-        {
-            //Выбор директории для файла
-            OpenFileDialog OpenFileDialog1 = new OpenFileDialog();
-            OpenFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
-
-            // Задание возможных расширений для файла
-            OpenFileDialog1.Filter = "txt files (*.xml)|*.xml| (*.*)|*.*";
-            OpenFileDialog1.FileName = "Animation";
-
-            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                
-                //Console.WriteLine("\nКадр №{0}\n", frameIndex);
-
-                string fileName = OpenFileDialog1.FileName;
-
-                //Создать новую анимация
-                Animation = new List<Frame>();
-                //Считать Xml Document
-                XmlDocument doc = new System.Xml.XmlDocument();
-                doc.Load(fileName);
-                //Считать количество кадров
-                XmlNodeList frameNodes = doc.SelectNodes("/Animation/Frame");
-
-                //Заполнить пустыми кадрами
-                for (int  frameIndex = 0; frameIndex < frameNodes.Count; frameIndex++)
-                {
-                    Animation.Add(new Frame());
-                }
-
-                //Заполнить упрощенные списки смежности
-                //Считать вершины в кадр (без соседей)
-                foreach (XmlNode frame in frameNodes)
-                {
-                    //Каждый кадр
-                    int frameID = Int32.Parse(frame.Attributes["ID"].Value);
-                    XmlNodeList vertices = frame.ChildNodes[0].ChildNodes;
-
-                    //Начальная init VerticesHashCodes & AdjacencyList
-                    Animation[frameID].VerticesHashCodes = new List<int>();
-                    Animation[frameID].AdjacencyList = new Dictionary<int, HashSet<int>>();
-                    for (int j = 0; j < vertices.Count; j++)
-                    {
-                        Animation[frameID].VerticesHashCodes.Add(-1);
-                        Animation[frameID].AdjacencyList.Add(j, new HashSet<int>());
-                    }
-
-                    //Инициализация вершин, и их Хэшкодов, без списка соседей
-                    foreach(XmlNode vert in vertices)
-                    {
-                        float x = Int32.Parse(vert.Attributes["X"].Value);
-                        float y = Int32.Parse(vert.Attributes["Y"].Value);
-                        int id = Int32.Parse(vert.Attributes["ID"].Value);
-
-                        Vertex2D newVertex = new Vertex2D(x, y);
-                        Animation[frameID].Vertices.Add(newVertex, new HashSet<Vertex2D>());
-                        Animation[frameID].VerticesHashCodes[id] = newVertex.GetHashCode();
-
-                        //Считать упрощенный список смежности
-                        //Добавить его к текущему кадру
-                        foreach (XmlNode neighbour in vert.ChildNodes)
-                        {
-                            Animation[frameID].AdjacencyList[id].Add(int.Parse(neighbour.InnerText));
-                        }
-
-                    }
-                    
-                } //end xml read
-                // Есть вершины и их хэщкоды, упрощенный список смежности
-
-                // Заполнить соседей
-
-
-
-            }// end if - openFileDialog
-
-        }//end click
-
+        
     }
 }

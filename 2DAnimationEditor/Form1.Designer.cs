@@ -118,6 +118,7 @@
             this.dataGridAnimation.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridAnimation.ColumnHeadersVisible = false;
             this.dataGridAnimation.Location = new System.Drawing.Point(12, 278);
+            this.dataGridAnimation.MultiSelect = false;
             this.dataGridAnimation.Name = "dataGridAnimation";
             this.dataGridAnimation.ReadOnly = true;
             this.dataGridAnimation.RowHeadersVisible = false;

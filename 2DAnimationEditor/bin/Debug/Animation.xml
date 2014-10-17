@@ -2,44 +2,92 @@
 <Animation>
   <Frame ID="0">
     <Vertices>
-      <Vertex X="195" Y="104" ID="0">
+      <Vertex X="165" Y="70" ID="0">
         <Neighbour>1</Neighbour>
-        <Neighbour>2</Neighbour>
         <Neighbour>4</Neighbour>
         <Neighbour>3</Neighbour>
         <Neighbour>6</Neighbour>
         <Neighbour>5</Neighbour>
+        <Neighbour>10</Neighbour>
       </Vertex>
       <Vertex X="253" Y="178" ID="1">
         <Neighbour>0</Neighbour>
       </Vertex>
-      <Vertex X="345" Y="125" ID="2">
+      <Vertex X="345" Y="125" ID="2" />
+      <Vertex X="557" Y="30" ID="3">
         <Neighbour>0</Neighbour>
-      </Vertex>
-      <Vertex X="300" Y="67" ID="3">
-        <Neighbour>0</Neighbour>
+        <Neighbour>12</Neighbour>
       </Vertex>
       <Vertex X="379" Y="218" ID="4">
         <Neighbour>0</Neighbour>
       </Vertex>
       <Vertex X="499" Y="206" ID="5">
         <Neighbour>0</Neighbour>
+        <Neighbour>11</Neighbour>
       </Vertex>
       <Vertex X="499" Y="119" ID="6">
         <Neighbour>0</Neighbour>
       </Vertex>
+      <Vertex X="139" Y="224" ID="7">
+        <Neighbour>8</Neighbour>
+        <Neighbour>9</Neighbour>
+      </Vertex>
+      <Vertex X="72" Y="141" ID="8">
+        <Neighbour>10</Neighbour>
+        <Neighbour>7</Neighbour>
+      </Vertex>
+      <Vertex X="27" Y="47" ID="9">
+        <Neighbour>7</Neighbour>
+      </Vertex>
+      <Vertex X="105" Y="25" ID="10">
+        <Neighbour>8</Neighbour>
+        <Neighbour>0</Neighbour>
+      </Vertex>
+      <Vertex X="457" Y="47" ID="11">
+        <Neighbour>5</Neighbour>
+      </Vertex>
+      <Vertex X="595" Y="86" ID="12">
+        <Neighbour>3</Neighbour>
+      </Vertex>
+      <Vertex X="592" Y="218" ID="13" />
     </Vertices>
   </Frame>
   <Frame ID="1">
-    <Vertices />
+    <Vertices>
+      <Vertex X="133" Y="94" ID="0" />
+      <Vertex X="228" Y="170" ID="1" />
+      <Vertex X="361" Y="76" ID="2" />
+      <Vertex X="445" Y="221" ID="3">
+        <Neighbour>4</Neighbour>
+      </Vertex>
+      <Vertex X="680" Y="71" ID="4">
+        <Neighbour>3</Neighbour>
+      </Vertex>
+    </Vertices>
   </Frame>
   <Frame ID="2">
-    <Vertices />
+    <Vertices>
+      <Vertex X="314" Y="64" ID="0" />
+      <Vertex X="492" Y="87" ID="1" />
+    </Vertices>
   </Frame>
   <Frame ID="3">
-    <Vertices />
+    <Vertices>
+      <Vertex X="217" Y="111" ID="0">
+        <Neighbour>1</Neighbour>
+      </Vertex>
+      <Vertex X="357" Y="112" ID="1">
+        <Neighbour>0</Neighbour>
+        <Neighbour>2</Neighbour>
+      </Vertex>
+      <Vertex X="459" Y="113" ID="2">
+        <Neighbour>1</Neighbour>
+      </Vertex>
+    </Vertices>
   </Frame>
   <Frame ID="4">
-    <Vertices />
+    <Vertices>
+      <Vertex X="315" Y="103" ID="0" />
+    </Vertices>
   </Frame>
 </Animation>
