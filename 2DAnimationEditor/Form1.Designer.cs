@@ -40,8 +40,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxCurrentFrame = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.buttonSaveAnimation = new System.Windows.Forms.Button();
             this.buttonLoadAnimation = new System.Windows.Forms.Button();
+            this.buttonSaveAnimation = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.SceneView)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridAnimation)).BeginInit();
@@ -184,6 +184,16 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Animation";
             // 
+            // buttonLoadAnimation
+            // 
+            this.buttonLoadAnimation.Location = new System.Drawing.Point(7, 50);
+            this.buttonLoadAnimation.Name = "buttonLoadAnimation";
+            this.buttonLoadAnimation.Size = new System.Drawing.Size(127, 24);
+            this.buttonLoadAnimation.TabIndex = 1;
+            this.buttonLoadAnimation.Text = "Load";
+            this.buttonLoadAnimation.UseVisualStyleBackColor = true;
+            this.buttonLoadAnimation.Click += new System.EventHandler(this.buttonLoadAnimation_Click);
+            // 
             // buttonSaveAnimation
             // 
             this.buttonSaveAnimation.Location = new System.Drawing.Point(7, 20);
@@ -193,15 +203,6 @@
             this.buttonSaveAnimation.Text = "Save";
             this.buttonSaveAnimation.UseVisualStyleBackColor = true;
             this.buttonSaveAnimation.Click += new System.EventHandler(this.buttonSaveAnimation_Click);
-            // 
-            // buttonLoadAnimation
-            // 
-            this.buttonLoadAnimation.Location = new System.Drawing.Point(7, 50);
-            this.buttonLoadAnimation.Name = "buttonLoadAnimation";
-            this.buttonLoadAnimation.Size = new System.Drawing.Size(127, 24);
-            this.buttonLoadAnimation.TabIndex = 1;
-            this.buttonLoadAnimation.Text = "Load";
-            this.buttonLoadAnimation.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

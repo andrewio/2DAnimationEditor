@@ -352,92 +352,84 @@ namespace _2DAnimationEditor
 
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                //Генерация упрощенных списков смежности
                 for (int frameIndex = 0; frameIndex < Animation.Count; frameIndex++)
                 {
                     CreateAdjecencyListForFrame(frameIndex);
                     //Распечатать список смежности
-                    PrintAdjacencyList(frameIndex);
+                    //PrintAdjacencyList(frameIndex);
 
                     Console.WriteLine("\nКадр №{0}\n", frameIndex);
                 }
 
                 // ***Запись в файл
                 string fileName = saveFileDialog1.FileName;
-
-                //Создание заготовочного файла с root элементом
-                XmlTextWriter textWritter = new XmlTextWriter(fileName, Encoding.UTF8);
-                textWritter.WriteStartDocument();
-                textWritter.WriteStartElement("Animation");
-                textWritter.WriteEndElement();
-                textWritter.Close();
-
-                XmlDocument document = new XmlDocument();
-                document.Load(fileName);
-
-                foreach(var frame in Animation)
-                {
-                    XmlNode xmlElementFrame = document.CreateElement("Frame");
-                    document.DocumentElement.AppendChild(xmlElementFrame);
-
-                    XmlNode xmlElementVertices = document.CreateElement("Vertices");
-                    xmlElementFrame.AppendChild(xmlElementVertices);
-
-
-                    int keyHashCode, keyIndex;
-                    // По расширенному списку смежности     
-                    foreach (var vert in frame.Vertices)
-                    {
-                        XmlNode xmlElementVertex = document.CreateElement("Vertex");
-                        xmlElementVertices.AppendChild(xmlElementVertex);
-
-                        XmlAttribute attributeX = document.CreateAttribute("X");
-                        attributeX.Value = vert.Key.X.ToString();
-                        xmlElementVertex.Attributes.Append(attributeX);
-
-                        XmlAttribute attributeY = document.CreateAttribute("Y");
-                        attributeY.Value = vert.Key.Y.ToString();
-                        xmlElementVertex.Attributes.Append(attributeY);
-
-                        XmlAttribute attributeID = document.CreateAttribute("ID");
-                        keyHashCode = vert.Key.GetHashCode();
-                        keyIndex = frame.VerticesHashCodes.IndexOf(keyHashCode);
-                        attributeID.Value = keyIndex.ToString();
-                        xmlElementVertex.Attributes.Append(attributeID);
-
-                        foreach (var neighbour in frame.AdjacencyList[keyIndex])
-                        {
-                            XmlNode xmlElementNeighbour = document.CreateElement("Neighbour");
-                            xmlElementNeighbour.InnerText = neighbour.ToString();
-                            xmlElementVertex.AppendChild(xmlElementNeighbour);
-                        }
-
-                    }
-
-                    // Прогон по вершинам и соседям
-                    //foreach (KeyValuePair<int, HashSet<int>> KV in frame.AdjacencyList)
-                    //{
-                    //    XmlNode xmlElementVertex = document.CreateElement("Vertex");
-                    //    xmlElementVertices.AppendChild(xmlElementVertex);
-
-                    //    XmlAttribute attributeX = document.CreateAttribute("X");
-                    //    float vertexHash = frame.VerticesHashCodes[KV.Key];
-                    //    //attributeX.Value = ; 
-                    //    //element.Attributes.Append(attribute); 
-
-                    //    foreach (var item in KV.Value)
-                    //    {
-                    //        Console.Write("{0} ", item);
-                    //    }
-                    //}
-
-                }
-
-                document.Save(fileName);
+                GenerateAnimationXml(fileName);
 
             }
             
 
         } // end Save Button Click
+
+        private void GenerateAnimationXml(string fileName)
+        {
+
+            //Создание заготовочного файла с root элементом
+            XmlTextWriter textWritter = new XmlTextWriter(fileName, Encoding.UTF8);
+            textWritter.WriteStartDocument();
+            textWritter.WriteStartElement("Animation");
+            textWritter.WriteEndElement();
+            textWritter.Close();
+
+            XmlDocument document = new XmlDocument();
+            document.Load(fileName);
+
+            foreach (var frame in Animation)
+            {
+                XmlNode xmlElementFrame = document.CreateElement("Frame");
+                document.DocumentElement.AppendChild(xmlElementFrame);
+
+                XmlAttribute frameID = document.CreateAttribute("ID");
+                frameID.Value = Animation.IndexOf(frame).ToString();
+                xmlElementFrame.Attributes.Append(frameID);
+
+                XmlNode xmlElementVertices = document.CreateElement("Vertices");
+                xmlElementFrame.AppendChild(xmlElementVertices);
+
+
+                int keyHashCode, keyIndex;
+                // По расширенному списку смежности     
+                foreach (var vert in frame.Vertices)
+                {
+                    XmlNode xmlElementVertex = document.CreateElement("Vertex");
+                    xmlElementVertices.AppendChild(xmlElementVertex);
+
+                    XmlAttribute attributeX = document.CreateAttribute("X");
+                    attributeX.Value = vert.Key.X.ToString();
+                    xmlElementVertex.Attributes.Append(attributeX);
+
+                    XmlAttribute attributeY = document.CreateAttribute("Y");
+                    attributeY.Value = vert.Key.Y.ToString();
+                    xmlElementVertex.Attributes.Append(attributeY);
+
+                    XmlAttribute attributeID = document.CreateAttribute("ID");
+                    keyHashCode = vert.Key.GetHashCode();
+                    keyIndex = frame.VerticesHashCodes.IndexOf(keyHashCode);
+                    attributeID.Value = keyIndex.ToString();
+                    xmlElementVertex.Attributes.Append(attributeID);
+
+                    foreach (var neighbour in frame.AdjacencyList[keyIndex])
+                    {
+                        XmlNode xmlElementNeighbour = document.CreateElement("Neighbour");
+                        xmlElementNeighbour.InnerText = neighbour.ToString();
+                        xmlElementVertex.AppendChild(xmlElementNeighbour);
+                    }
+
+                }
+            }
+
+            document.Save(fileName);
+        }
 
         private void CreateAdjecencyListForFrame(int frameIndex)
         {
@@ -515,6 +507,31 @@ namespace _2DAnimationEditor
             foreach (var i in a)
             {
                 Console.Write("{0}\t",i);
+            }
+        }
+
+        private void buttonLoadAnimation_Click(object sender, EventArgs e)
+        {
+            //Выбор директории для файла
+            OpenFileDialog OpenFileDialog1 = new OpenFileDialog();
+            OpenFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+
+            // Задание возможных расширений для файла
+            OpenFileDialog1.Filter = "txt files (*.xml)|*.xml| (*.*)|*.*";
+            OpenFileDialog1.FileName = "Animation";
+
+            if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                for (int frameIndex = 0; frameIndex < Animation.Count; frameIndex++)
+                {
+                    CreateAdjecencyListForFrame(frameIndex);
+                    //Распечатать список смежности
+                    PrintAdjacencyList(frameIndex);
+
+                    Console.WriteLine("\nКадр №{0}\n", frameIndex);
+                }
+
+
             }
         }
 
